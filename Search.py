@@ -1,25 +1,16 @@
-# =============================================================================
-# search.py — Semantic Search Engine (PostgreSQL + pgvector)
-# Self-contained: embedding + search in one file, no other imports needed.
-# =============================================================================
+
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from sentence_transformers import SentenceTransformer
 from Config import DB_CONFIG, EMBEDDING_MODEL, TOP_K
 
-# ---------------------------------------------------------------------------
-# Load the embedding model ONCE when the file is imported.
-# This avoids reloading it on every search query.
-# ---------------------------------------------------------------------------
+
 print(f"[Search] Loading model '{EMBEDDING_MODEL}'...")
 _model = SentenceTransformer(EMBEDDING_MODEL)
 print(f"[Search] Model ready ✅")
 
 
-# ---------------------------------------------------------------------------
-# INTERNAL HELPERS
-# ---------------------------------------------------------------------------
 
 def _get_connection():
     """Open a PostgreSQL connection using credentials from config.py."""
@@ -35,9 +26,6 @@ def _embed(text: str) -> str:
     return "[" + ",".join(map(str, vector)) + "]"
 
 
-# ---------------------------------------------------------------------------
-# PUBLIC API — these two functions are called by app.py
-# ---------------------------------------------------------------------------
 
 def semantic_search(question: str, top_k: int = TOP_K) -> list[dict]:
     """
