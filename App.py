@@ -1,8 +1,4 @@
-# =============================================================================
-# app.py — Streamlit RAG: Semantic Search + AI Answer — Boulangerie / Pâtisserie
-# Multilingual: French / Arabic toggle
-# Run with:  streamlit run app.py
-# =============================================================================
+
 
 import re
 import os
@@ -12,9 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from Search import semantic_search, test_connection
 
-# ---------------------------------------------------------------------------
-# TRANSLATIONS
-# ---------------------------------------------------------------------------
+
 TRANSLATIONS = {
     "fr": {
         "page_title":    "Recherche Sémantique — Boulangerie",
@@ -120,23 +114,16 @@ Instructions :
     }
 }
 
-# ---------------------------------------------------------------------------
-# PAGE CONFIG
-# ---------------------------------------------------------------------------
+
 st.set_page_config(page_title="Recherche Sémantique — Boulangerie", page_icon="🥐", layout="centered")
 
-# ---------------------------------------------------------------------------
-# LANGUAGE STATE
-# ---------------------------------------------------------------------------
 if "lang" not in st.session_state:
     st.session_state.lang = "fr"
 
 T = TRANSLATIONS[st.session_state.lang]
 is_rtl = T["dir"] == "rtl"
 
-# ---------------------------------------------------------------------------
-# CSS
-# ---------------------------------------------------------------------------
+
 st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;500;600&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
@@ -282,18 +269,14 @@ div[data-testid="stTextArea"] textarea:focus {{
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# LANGUAGE TOGGLE BUTTON
-# ---------------------------------------------------------------------------
+
 col_lang = st.columns([4, 1])
 with col_lang[1]:
     if st.button(T["lang_btn"], key="lang_toggle"):
         st.session_state.lang = "ar" if st.session_state.lang == "fr" else "fr"
         st.rerun()
 
-# ---------------------------------------------------------------------------
-# HEADER
-# ---------------------------------------------------------------------------
+
 st.markdown(f"""
 <div class="header-block">
     <div class="header-icon">🥐</div>
@@ -302,9 +285,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# DB CHECK
-# ---------------------------------------------------------------------------
+
 @st.cache_resource
 def check_db():
     return test_connection()
@@ -314,9 +295,7 @@ if not db_ok:
     st.error(T["db_error"])
     st.stop()
 
-# ---------------------------------------------------------------------------
-# AI ANSWER GENERATION using Groq
-# ---------------------------------------------------------------------------
+
 def generate_answer(question: str, chunks: list[dict], lang: str) -> str:
     context = "\n\n".join([
         f"Fragment {i+1}:\n{c['texte_fragment']}"
@@ -334,9 +313,7 @@ def generate_answer(question: str, chunks: list[dict], lang: str) -> str:
     except Exception as e:
         return f"*(Génération indisponible : {e})*"
 
-# ---------------------------------------------------------------------------
-# HELPERS
-# ---------------------------------------------------------------------------
+
 def score_class(s): return "high" if s >= 0.75 else "medium" if s >= 0.50 else "low"
 def score_label(s, T):
     if s >= 0.75: return T["very_relevant"]
@@ -344,9 +321,7 @@ def score_label(s, T):
     return T["low_relevant"]
 def score_pct(s): return min(100, max(0, int(s * 100)))
 
-# ---------------------------------------------------------------------------
-# SEARCH FORM
-# ---------------------------------------------------------------------------
+
 st.markdown(f'<div class="search-label">{T["search_label"]}</div>', unsafe_allow_html=True)
 
 question = st.text_area(
@@ -366,9 +341,7 @@ with col2:
                 question = ex
                 search_clicked = True
 
-# ---------------------------------------------------------------------------
-# SEARCH + ANSWER
-# ---------------------------------------------------------------------------
+
 if search_clicked:
     q = question.strip()
     if not q:
@@ -427,9 +400,7 @@ if search_clicked:
                 </div>
                 """, unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# FOOTER
-# ---------------------------------------------------------------------------
+
 st.markdown(f"""
 <div class="footer">
     {T['footer_model']} : <strong>all-MiniLM-L6-v2</strong> &nbsp;·&nbsp;
