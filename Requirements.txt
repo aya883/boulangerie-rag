@@ -1,0 +1,8 @@
+psycopg2-binary
+sentence-transformers
+numpy
+pypdf
+streamlit
+pdfplumber
+groq
+python-dotenv
