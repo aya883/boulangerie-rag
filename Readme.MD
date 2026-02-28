@@ -1,4 +1,4 @@
-🥐 Recherche Sémantique — Boulangerie & Pâtisserie
+🥐 Recherche Sémantique : Boulangerie & Pâtisserie
 
 Système RAG (Retrieval-Augmented Generation) pour l'assistance intelligente à la formulation en boulangerie et pâtisserie industrielle.
 
